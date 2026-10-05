@@ -1,0 +1,56 @@
+export const config = {
+  settings: {
+    exportFormat: {
+      type: "select",
+      required: true,
+      order: 1,
+      group: "output",
+      label: "Export format",
+      options: ["PNG", "JPG", "WebP"],
+      default: "PNG",
+    },
+    quality: {
+      type: "select",
+      required: true,
+      order: 2,
+      group: "output",
+      label: "Quality",
+      options: ["Draft", "Standard", "High"],
+      default: "Standard",
+      allowOther: true,
+    },
+    watermark: {
+      type: "toggle",
+      required: false,
+      order: 3,
+      group: "output",
+      label: "Add watermark",
+    },
+    campaignNote: {
+      type: "textarea",
+      required: false,
+      order: 4,
+      group: "meta",
+      label: "Campaign note",
+      maxLength: 300,
+    },
+  },
+  rows: {
+    type: "repeater",
+    label: "Items to export",
+    min: 2,
+    max: 6,
+    itemLabel: "Item",
+    fields: {
+      image: { type: "file", accept: "image", required: true, label: "Image" },
+      name: { type: "text", required: true, label: "Item name" },
+      size: {
+        type: "select",
+        required: true,
+        label: "Size",
+        options: ["1080x1080", "1080x1350", "1080x1920"],
+        default: "1080x1080",
+      },
+    },
+  },
+};
