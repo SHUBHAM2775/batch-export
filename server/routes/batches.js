@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { config } from "../config.js";
-import { createBatch } from "../store.js";
+import { createBatch, getBatch } from "../store.js";
 
 const router = Router();
 
@@ -19,6 +19,15 @@ router.post("/", (req, res) => {
 
     const batch = createBatch(settings, rows);
     res.status(201).json({ batchId : batch.id});
+});
+
+router.get("/:batchId", (req,res) => {
+    const batch = getBatch(req.params.batchId);
+
+    if(!batch) {
+        return res.status(404).json({ error : "Batch not found" });
+    }
+    res.json(batch);
 });
 
 export default router;
