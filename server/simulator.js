@@ -56,3 +56,10 @@ export function startBatch(batch) {
     runRow(row, startDelayMs, finishMs - startDelayMs);
   });
 }
+
+export function retryRow(row) {
+  const startDelayMs = randomBetween(500,1500);
+  const processingMs = randomBetween(5000,10000);
+
+  runRow(row, startDelayMs, processingMs);
+}

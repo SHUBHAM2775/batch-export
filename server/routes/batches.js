@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { config } from "../config.js";
 import { createBatch, getBatch } from "../store.js";
-import { startBatch } from "../simulator.js";
+import { startBatch , retryRow } from "../simulator.js";
 
 const router = Router();
 
@@ -30,6 +30,29 @@ router.get("/:batchId", (req,res) => {
         return res.status(404).json({ error : "Batch not found" });
     }
     res.json(batch);
+});
+
+router.post("/:batchId/rows/:rowId/retry", (req,res) => {
+    const batch = getBatch(req.params.batchId);
+
+    if(!batch)
+    {
+        return res.status(404).json({ error : "Batch not found"});
+    }
+
+    const row = batch.rows.find((r) => r.id === req.params.rowId);
+
+    if(!row) {
+        return res.status(404).json({ error : "Row not found "});
+    }
+
+    if(row.status !== "failed")
+    {
+        return res.status(409).json({ error : "Only failed rows can be retired "});
+    }
+
+    retryRow(row);
+    res.json(row);
 });
 
 export default router;
