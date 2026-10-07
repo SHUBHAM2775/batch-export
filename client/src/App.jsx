@@ -1,3 +1,7 @@
 export default function App() {
-  return <h1>Batch Export Console</h1>;
+  return (
+    <h1 className="p-6 text-3xl font-bold text-blue-600">
+      Batch Export Console
+    </h1>
+  );
 }
