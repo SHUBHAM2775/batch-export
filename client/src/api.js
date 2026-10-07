@@ -26,5 +26,7 @@ export const createBatch = (settings, rows) =>
         body: JSON.stringify({ settings, rows }),
     });
 
+export const getBatch = (batchID) => request(`/batches/${batchId}`);
+
 export const retryRow = (batchId, rowId) =>
     request(`/batches/${batchId}/rows/${rowId}/retry`, {method : "POST"});
