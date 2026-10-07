@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { config } from "../config.js";
 import { createBatch, getBatch } from "../store.js";
+import { startBatch } from "../simulator.js";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.post("/", (req, res) => {
     }
 
     const batch = createBatch(settings, rows);
+    startBatch(batch);
     res.status(201).json({ batchId : batch.id});
 });
 
