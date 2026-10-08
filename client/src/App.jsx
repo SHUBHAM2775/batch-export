@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getConfig } from "./api";
 import { useBatchForm } from "./hooks/useBatchForm.js";
+import { useTheme } from "./hooks/useTheme.js";
 import SettingsPanel from "./components/form/SettingsPanel.jsx";
 import RowRepeater from "./components/form/RowRepeater.jsx";
 import Button from "./components/ui/Button.jsx";
 import BatchView from "./components/batch/BatchView.jsx";
+import ThemeToggle from "./components/ui/ThemeToggle.jsx";
 
 function Console({ config, onSubmitted }) {
   const {
@@ -54,6 +56,7 @@ export default function App() {
   const [batchId, setBatchId] = useState(() =>
     new URLSearchParams(window.location.search).get("batch")
   );
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     getConfig().then(setConfig).catch((error) => setLoadError(error.message));
@@ -65,20 +68,36 @@ export default function App() {
   };
 
   if (loadError) {
-    return <p className="p-6 text-red-600">Could not load config : {loadError}</p>;
+    return (
+      <>
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        <p className="p-6 text-red-600">Could not load config : {loadError}</p>
+      </>
+    );
   }
 
   if (!config) {
-    return <p className="p-6">Loading...</p>;
+    return (
+      <>
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        <p className="p-6">Loading...</p>
+      </>
+    );
   }
 
   if (batchId) {
     return (
       <main className="p-6">
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
         <BatchView batchId={batchId} />
       </main>
     );
   }
 
-  return <Console config={config} onSubmitted={handleSubmitted} />;
+  return (
+    <>
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      <Console config={config} onSubmitted={handleSubmitted} />
+    </>
+  );
 }
