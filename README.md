@@ -52,10 +52,10 @@ I store the `batchId` in the URL query string (`?batch=...`) when a batch is sta
 
 **Trade-off:** It exposes the internal batch ID in the URL, which is fine for this project but would need proper authorization in a production app.
 
-## What I Would Improve With More Time
+## If I Had More Time
 
 I would move the image resizing logic into a **Web Worker**. Currently, the Canvas processing happens on the main thread. For batches with several large images, this could cause the UI to freeze momentarily. A worker would keep the interface responsive while the images are being processed in the background.
 
 ## Time Taken
 
-Approximately 12 hours, including implementation, debugging and testing.
+Approximately 15 hours, including implementation, debugging and testing.
