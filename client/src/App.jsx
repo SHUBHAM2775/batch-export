@@ -4,6 +4,7 @@ import { useBatchForm } from "./hooks/useBatchForm.js";
 import SettingsPanel from "./components/form/SettingsPanel.jsx";
 import RowRepeater from "./components/form/RowRepeater.jsx";
 import Button from "./components/ui/Button.jsx";
+import BatchView from "./components/batch/BatchView.jsx";
 
 function Console({ config, onSubmitted }) {
   const {
@@ -22,7 +23,7 @@ function Console({ config, onSubmitted }) {
 
   return (
     <main className="p-6">
-      <h1 className="text-3xl font-bold text-blue-600">Batch Export Console</h1>
+      <h1 className="">Batch Export Console</h1>
       <SettingsPanel
         schema={config.settings}
         values={settings}
@@ -43,9 +44,6 @@ function Console({ config, onSubmitted }) {
         Submit
       </Button>
       {submitError && <p role="alert">{submitError}</p>}
-      <pre className="mt-4 text-sm">
-        {JSON.stringify({ settings, rows }, null, 2)}
-      </pre>
     </main>
   );
 }
@@ -77,7 +75,7 @@ export default function App() {
   if (batchId) {
     return (
       <main className="p-6">
-        <p>Batch: {batchId}</p>
+        <BatchView batchId={batchId} />
       </main>
     );
   }
