@@ -1,4 +1,4 @@
-import FieldRenderer from "../FieldRenderer.jsx";
+import FieldRenderer from "./FieldRenderer.jsx";
 import ImageUpload from "./ImageUpload.jsx";
 import Button from "../ui/Button.jsx";
 
@@ -7,49 +7,54 @@ export default function RowItem({
   index,
   total,
   fields,
+  itemLabel = "Item",
+  canRemove,
   errors,
   onRemove,
   onMove,
   onUpdate,
-  canRemove,
-  itemLabel = "Item",
 }) {
+  const fieldEntries = fields ? Object.entries(fields) : [];
+  const sortedFields = [...fieldEntries].sort(
+    ([, a], [, b]) => (a.order ?? 0) - (b.order ?? 0)
+  );
+
   return (
     <div>
       <span>
         {itemLabel} {index + 1}
       </span>
-      <ImageUpload
-        value={row?.image}
-        onChange={(file) => onUpdate(index, "image", file)}
-        error={errors?.image}
-      />
-      {fields?.name && (
-        <FieldRenderer
-          id={`row-${index}-name`}
-          field={fields.name}
-          value={row?.name}
-          onChange={(val) => onUpdate(index, "name", val)}
-          error={errors?.name}
-        />
-      )}
-      {fields?.size && (
-        <FieldRenderer
-          id={`row-${index}-size`}
-          field={fields.size}
-          value={row?.size}
-          onChange={(val) => onUpdate(index, "size", val)}
-          error={errors?.size}
-        />
-      )}
-      <Button onClick={() => onRemove(index)} disabled={!canRemove}>
+      {sortedFields.map(([fieldName, fieldDef]) => {
+        if (fieldDef.type === "file") {
+          return (
+            <ImageUpload
+              key={fieldName}
+              value={row?.values?.[fieldName]}
+              onChange={(val) => onUpdate(row.id, fieldName, val)}
+              error={errors?.[fieldName]}
+            />
+          );
+        }
+
+        return (
+          <FieldRenderer
+            key={fieldName}
+            id={`row-${row.id}-${fieldName}`}
+            field={fieldDef}
+            value={row?.values?.[fieldName]}
+            onChange={(val) => onUpdate(row.id, fieldName, val)}
+            error={errors?.[fieldName]}
+          />
+        );
+      })}
+      <Button onClick={() => onRemove(row.id)} disabled={!canRemove}>
         Remove
       </Button>
-      <Button onClick={() => onMove(index, index - 1)} disabled={index === 0}>
+      <Button onClick={() => onMove(row.id, -1)} disabled={index === 0}>
         Move up
       </Button>
       <Button
-        onClick={() => onMove(index, index + 1)}
+        onClick={() => onMove(row.id, 1)}
         disabled={index >= total - 1}
       >
         Move down

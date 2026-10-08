@@ -1,40 +1,26 @@
-import FieldRenderer from "../FieldRenderer.jsx";
+import FieldRenderer from "./FieldRenderer.jsx";
+import { groupFields } from "../../utils/schema.js";
 
 export default function SettingsPanel({ schema, values, errors, onChange }) {
-  const fields = schema ? Object.entries(schema) : [];
-
-  const groups = fields.reduce((acc, [fieldName, fieldDef]) => {
-    const groupName = fieldDef.group || "default";
-    if (!acc[groupName]) {
-      acc[groupName] = [];
-    }
-    acc[groupName].push({ fieldName, fieldDef });
-    return acc;
-  }, {});
+  const groups = groupFields(schema);
 
   return (
     <div>
-      {Object.entries(groups).map(([groupName, groupFields]) => {
-        const sortedFields = [...groupFields].sort(
-          (a, b) => (a.fieldDef.order ?? 0) - (b.fieldDef.order ?? 0)
-        );
-
-        return (
-          <section key={groupName}>
-            <h2>{groupName}</h2>
-            {sortedFields.map(({ fieldName, fieldDef }) => (
-              <FieldRenderer
-                key={fieldName}
-                id={fieldName}
-                field={fieldDef}
-                value={values?.[fieldName]}
-                onChange={(newValue) => onChange(fieldName, newValue)}
-                error={errors?.[fieldName]}
-              />
-            ))}
-          </section>
-        );
-      })}
+      {groups.map(({ group, fields }) => (
+        <section key={group}>
+          <h2>{group}</h2>
+          {fields.map(([name, field]) => (
+            <FieldRenderer
+              key={name}
+              id={`settings-${name}`}
+              field={field}
+              value={values?.[name]}
+              onChange={(newValue) => onChange(name, newValue)}
+              error={errors?.[name]}
+            />
+          ))}
+        </section>
+      ))}
     </div>
   );
 }

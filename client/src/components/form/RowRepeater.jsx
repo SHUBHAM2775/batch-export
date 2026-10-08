@@ -5,6 +5,7 @@ export default function RowRepeater({
   schema,
   rows,
   errors,
+  error,
   onAdd,
   onRemove,
   onMove,
@@ -14,7 +15,7 @@ export default function RowRepeater({
   const max = schema?.max ?? Infinity;
   const rowList = rows || [];
   const canRemove = rowList.length > min;
-  const isMaxReached = rowList.length >= max;
+  const canAdd = rowList.length < max;
 
   return (
     <section>
@@ -25,23 +26,24 @@ export default function RowRepeater({
       <div>
         {rowList.map((row, index) => (
           <RowItem
-            key={row?.id ?? index}
+            key={row.id}
             row={row}
             index={index}
             total={rowList.length}
             fields={schema?.fields}
-            errors={errors?.[index] || errors?.[row?.id]}
+            itemLabel={schema?.itemLabel}
+            canRemove={canRemove}
+            errors={errors?.[row.id]}
             onRemove={onRemove}
             onMove={onMove}
             onUpdate={onUpdate}
-            canRemove={canRemove}
-            itemLabel={schema?.itemLabel}
           />
         ))}
       </div>
-      <Button onClick={onAdd} disabled={isMaxReached}>
+      <Button onClick={onAdd} disabled={!canAdd}>
         Add {schema?.itemLabel}
       </Button>
+      {error && <p role="alert">{error}</p>}
     </section>
   );
 }
