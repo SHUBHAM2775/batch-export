@@ -18,12 +18,8 @@ export default function RowRepeater({
   const canAdd = rowList.length < max;
 
   return (
-    <section>
-      <h2>{schema?.label}</h2>
-      <p>
-        {min}–{max} items
-      </p>
-      <div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3">
         {rowList.map((row, index) => (
           <RowItem
             key={row.id}
@@ -40,10 +36,18 @@ export default function RowRepeater({
           />
         ))}
       </div>
-      <Button onClick={onAdd} disabled={!canAdd}>
-        Add {schema?.itemLabel}
-      </Button>
-      {error && <p role="alert">{error}</p>}
-    </section>
+
+      <div className="space-y-3">
+        <Button
+          onClick={onAdd}
+          disabled={!canAdd}
+          variant="outline"
+          className="w-full py-3 border-dashed border-2 text-text-muted hover:text-text-main hover:border-accent"
+        >
+          + Add {schema?.itemLabel}
+        </Button>
+        {error && <p role="alert" className="text-error text-sm font-medium text-center">{error}</p>}
+      </div>
+    </div>
   );
 }
