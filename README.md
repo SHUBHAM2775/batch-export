@@ -56,6 +56,12 @@ I store the `batchId` in the URL query string (`?batch=...`) when a batch is sta
 
 I would move the image resizing logic into a **Web Worker**. Currently, the Canvas processing happens on the main thread. For batches with several large images, this could cause the UI to freeze momentarily. A worker would keep the interface responsive while the images are being processed in the background.
 
+## Deployment Notes
+
+The backend uses in-memory storage, so active batch data is not persisted across server restarts.
+
+The deployed backend may experience a short cold start after a period of inactivity. The first request may therefore take slightly longer while the server wakes up.
+
 ## Time Taken
 
 Approximately 15 hours, including implementation, debugging and testing.
